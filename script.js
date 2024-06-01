@@ -1,7 +1,8 @@
-const products = [
+const items = [
     {
         title: "Платье Лика",
         description: "Элегантное платье и фата расшитые бабаочками",
+        tags: ["женское", "платье"],
         price: 1500,
         img: "./img/1.jpg",
         rating: 4.8,
@@ -9,6 +10,7 @@ const products = [
     {
         title: "Платье Синди",
         description: "Простое и элегантное платье",
+        tags: ["женское", "платье"],
         price: 900,
         img: "./img/2.jpg",
         rating: 3.0,
@@ -16,6 +18,7 @@ const products = [
     {
         title: "Платье Кристал",
         description: "Обворожительное блестящее платье приковывающее взгляд",
+        tags: ["женское", "платье"],
         price: 2000,
         img: "./img/3.jpg",
         rating: 5.0,
@@ -23,6 +26,7 @@ const products = [
     {
         title: "Платье Моника ",
         description: "Пышное платье расшитое цветами",
+        tags: ["женское", "платье"],
         price: 1050,
         img: "./img/4.jpg",
         rating: 4.7,
@@ -30,6 +34,7 @@ const products = [
     {
         title: "Платье Луиза",
         description: "Платье атластное, прямого силуэта",
+        tags: ["женское", "платье"],
         price: 400,
         img: "./img/5.jpg",
         rating: 2.3,
@@ -37,6 +42,7 @@ const products = [
     {
         title: "Платье Лилия ",
         description: "Платье пышное, расшито тонкими цветами ",
+        tags: ["женское", "платье"],
         price: 900,
         img: "./img/6.jpg",
         rating: 3.9,
@@ -44,6 +50,7 @@ const products = [
     {
         title: "Платье мини Амелия",
         description: "Платье короткое, расшито круживом",
+        tags: ["женское", "платье"],
         price: 980,
         img: "./img/7.jpg",
         rating: 4.9,
@@ -51,6 +58,7 @@ const products = [
     {
         title: "Платье Рыбка",
         description: "Платье с длинным шлейфом и открытой спиной",
+        tags: ["женское", "платье"],
         price: 1100,
         img: "./img/8.jpg",
         rating: 4.4,
@@ -58,6 +66,7 @@ const products = [
     {
         title: "Платье Ника",
         description: "Атластное платье с умеренно пышной юбкой",
+        tags: ["женское", "платье"],
         price: 1500,
         img: "./img/9.jpg",
         rating: 4.1,
@@ -65,6 +74,7 @@ const products = [
     {
         title: "Платье Моника",
         description: "Платье подчеркивающее фигуру с рукавом, расшитое кружевом",
+        tags: ["женское", "платье"],
         price: 800,
         img: "./img/10.jpg",
         rating: 3.7,
@@ -72,6 +82,7 @@ const products = [
     {
         title: "Платье Нурит",
         description: "Атластное платье с открытой спиной расшитое кружевом",
+        tags: ["женское", "платье"],
         price: 2500,
         img: "./img/11.jpg",
         rating: 5.0,
@@ -79,106 +90,126 @@ const products = [
     {
         title: "Платье Лав",
         description: "Силуэт рыбка с длинным шлейфом и открытым декольте",
+        tags: ["женское", "платье"],
         price: 1800,
         img: "./img/12.jpg",
         rating: 4.1,
     },
 ];
 
-const searchInput = document.getElementById("search-input");
-const searchBtn = document.getElementById("search-btn");
-const itemsContainer = document.getElementById("items-container");
-const sortSelect = document.getElementById("sort");
-const nothingFoundMessage = document.getElementById("nothing-found");
+let currentState = [...items];
 
+const itemsContainer = document.querySelector("#shop-items");
+const itemTemplate = document.querySelector("#item-template");
+const nothingFound = document.querySelector("#nothing-found");
 
-function generateCards() {
+function renderItems(arr) {
+    nothingFound.textContent = "";
     itemsContainer.innerHTML = "";
 
-    const filteredProducts = applyFilters(products);
+    arr.forEach((item) => {
 
-    if (filteredProducts.length === 0) {
-        nothingFoundMessage.style.display = "block";
-    } else {
-        nothingFoundMessage.style.display = "none";
-        filteredProducts.forEach((product) => {
-            const card = document.createElement("div");
-            card.classList.add("shop-item");
+        itemsContainer.append(prepareShopItem(item));
+    });
 
-            const img = document.createElement("img");
-            img.src = "product-image.jpg";
-            img.alt = product.title;
-
-            const content = document.createElement("div");
-            content.classList.add("content");
-
-            const tags = document.createElement("div");
-            tags.classList.add("tags");
-
-
-            const title = document.createElement("h1");
-            title.textContent = product.name;
-
-            const description = document.createElement("p");
-            description.textContent = product.description;
-
-            content.appendChild(tags);
-            content.appendChild(title);
-            content.appendChild(description);
-
-            const footer = document.createElement("div");
-            footer.classList.add("footer");
-
-            const price = document.createElement("span");
-            price.textContent = `Price: $${product.price}`;
-
-            const rating = document.createElement("div");
-            rating.classList.add("rating");
-
-            footer.appendChild(price);
-            footer.appendChild(rating);
-
-            card.appendChild(img);
-            card.appendChild(content);
-            card.appendChild(footer);
-            img.src = product.img;
-
-            itemsContainer.appendChild(card);
-        });
+    if (!arr.length) {
+        nothingFound.textContent = "Ничего не найдено";
     }
 }
 
 
-function applyFilters(products) {
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    const sortOption = sortSelect.value;
+function sortByAlphabet(a, b) {
 
-    let filteredProducts = products;
-
-    if (searchTerm) {
-        filteredProducts = filteredProducts.filter((product) =>
-            product.title.toLowerCase().includes(searchTerm)
-        );
+    if (a.title > b.title) {
+        return 1;
     }
 
-    if (sortOption !== "alphabet") {
-        filteredProducts.sort((a, b) => {
-            if (sortOption === "expensive") {
-                return b.price - a.price;
-            } else if (sortOption === "cheap") {
-                return a.price - b.price;
-            } else if (sortOption === "rating") {
-                return b.rating - a.rating;
-            }
-            return 0;
-        });
+    if (a.title < b.title) {
+        return -1;
     }
 
-    return filteredProducts;
+    return 0;
 }
 
-searchInput.addEventListener("input", generateCards);
-searchBtn.addEventListener("click", generateCards);
-sortSelect.addEventListener("change", generateCards);
 
-generateCards();
+renderItems(currentState.sort((a, b) => sortByAlphabet(a, b)));
+
+
+function prepareShopItem(shopItem) {
+
+    const { title, description, tags, img, price, rating } = shopItem;
+
+    const item = itemTemplate.content.cloneNode(true);
+
+    item.querySelector("h2").textContent = title;
+    item.querySelector("p").textContent = description;
+    item.querySelector("img").src = img;
+    item.querySelector(".price").textContent = `${price}P`;
+
+    const ratingContainer = item.querySelector(".rating");
+    for (let i = 0; i < rating; i++) {
+        const star = document.createElement("i");
+        star.classList.add("fa", "fa-star");
+        ratingContainer.append(star);
+    }
+
+    const tagsHolder = item.querySelector(".tags");
+
+    tags.forEach((tag) => {
+        const element = document.createElement("span");
+        element.textContent = tag;
+        element.classList.add("tag");
+        tagsHolder.append(element);
+    });
+
+
+    return item;
+}
+
+
+const searchInput = document.querySelector("#search-input");
+const searchButton = document.querySelector("#search-btn");
+const sortControl = document.querySelector("#sort");
+
+function applySearch() {
+    const searchString = searchInput.value.trim().toLowerCase();
+
+    currentState = items.filter((el) =>
+        el.title.toLowerCase().includes(searchString)
+    );
+
+    currentState.sort((a, b) => sortByAlphabet(a, b));
+    renderItems(currentState);
+}
+
+searchButton.addEventListener("click", applySearch);
+searchInput.addEventListener("search", applySearch);
+
+currentState.sort((a, b) => sortByAlphabet(a, b));
+renderItems(currentState);
+sortControl.selectedIndex = 0;
+
+
+sortControl.addEventListener("change", (event) => {
+    const selectedOption = event.target.value;
+    switch (selectedOption) {
+        case "expensive": {
+            currentState.sort((a, b) => b.price - a.price);
+            break;
+        }
+        case "cheap": {
+            currentState.sort((a, b) => a.price - b.price);
+            break;
+        }
+        case "rating": {
+            currentState.sort((a, b) => b.rating - a.rating);
+            break;
+        }
+        case "alphabet": {
+            currentState.sort((a, b) => sortByAlphabet(a, b));
+            break;
+        }
+    }
+
+    renderItems(currentState);
+});
