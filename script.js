@@ -169,6 +169,7 @@ function prepareShopItem(shopItem) {
 
 const searchInput = document.querySelector("#search-input");
 const searchButton = document.querySelector("#search-btn");
+const sortControl = document.querySelector("#sort");
 
 function applySearch() {
     const searchString = searchInput.value.trim().toLowerCase();
@@ -188,7 +189,7 @@ currentState.sort((a, b) => sortByAlphabet(a, b));
 renderItems(currentState);
 sortControl.selectedIndex = 0;
 
-const sortControl = document.querySelector("#sort");
+
 sortControl.addEventListener("change", (event) => {
     const selectedOption = event.target.value;
     switch (selectedOption) {
