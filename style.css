@@ -77,14 +77,21 @@
     gap: 20px;
 }
 
+#shop-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  justify-content: center;
+}
+
 .shop-item {
-    width: calc(25% - 17px);
-    border-radius: 4px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    border: 1px solid;
+  width: 300px;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid;
 }
 
 .shop-item .content {
